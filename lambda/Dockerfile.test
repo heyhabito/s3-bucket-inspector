@@ -1,0 +1,17 @@
+FROM python:3.7-slim-stretch
+
+# By default python writes junk (*.pyc) files everywhere
+ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE 1
+
+RUN groupadd -r me && \
+    useradd -r -g me me && \
+    mkdir /app
+
+# Mount the app code volume in /app
+WORKDIR /app
+
+COPY requirements-test.txt /requirements.txt
+RUN pip install -r /requirements.txt
+
+USER me
