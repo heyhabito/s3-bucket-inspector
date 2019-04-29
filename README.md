@@ -50,6 +50,9 @@ You might want public read access on a particular bucket. If so, put a `whitelis
 All buckets will still be checked for all issues and they'll appear in the output file, but you won't be notified on Slack. This way, the output files don't depend on the content of the `whitelist.json` file at run time.
 
 ### Slack notification
+
+<img height="150" alt="Leaky bucket Slack bot" src="https://raw.githubusercontent.com/heyhabito/s3-bucket-inspector/images/leaky.png">
+
 Create an integration and encrypt the Slack hook with a KMS key.
 ```bash
 aws kms encrypt \
