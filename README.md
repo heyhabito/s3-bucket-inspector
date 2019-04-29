@@ -1,6 +1,8 @@
 # S3 Bucket Inspector
 Think you set your S3 bucket policies correctly? Nothing accidentally public? Trust but verify.
 
+![Leaky bucket notification](https://raw.githubusercontent.com/heyhabito/s3-bucket-inspector/images/leaky.png)
+
 ## Why
 S3 configuration can be complicated. You can have conflicting bucket ACL, bucket policy, object ACLs, public access blocks. Tools for inspecting S3 policies don't always understand the nuances of IP whitelisting and can blurt out false positives or give false negatives. On top of that, your perfectly configured bucket could have been reconfigured by a colleague.
 
