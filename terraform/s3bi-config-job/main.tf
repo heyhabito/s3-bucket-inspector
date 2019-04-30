@@ -71,14 +71,13 @@ resource "aws_iam_role_policy_attachment" "s3bi-write-config" {
 }
 
 resource "aws_lambda_function" "s3bi_config_lambda" {
-  function_name    = "s3bi-config"
-  description      = "Job to make a config for s3bi with a list of buckets and keys"
-  filename         = "${var.zip_file}"
-  role             = "${aws_iam_role.s3bi_lambda_config_role.arn}"
-  handler          = "lambda.config_handler"
-  source_code_hash = "${filebase64sha256(var.zip_file)}"
-  runtime          = "python3.7"
-  timeout          = 900
+  function_name = "s3bi-config"
+  description   = "Job to make a config for s3bi with a list of buckets and keys"
+  filename      = "${path.module}/../no-code-deployed-yet.zip"
+  role          = "${aws_iam_role.s3bi_lambda_config_role.arn}"
+  handler       = "lambda.config_handler"
+  runtime       = "python3.7"
+  timeout       = 900
 
   environment {
     variables = {

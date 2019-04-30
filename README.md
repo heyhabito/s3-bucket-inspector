@@ -30,7 +30,9 @@ The following issues are reported:
 ## Configuring
 
 ### Terraform all the things
-There is an example in the terraform directory of how to set up all the infrastructure for this with terraform including a cloudwatch event which triggers once a day (configurable). The AWS console is a massive foot-gun: use code for your infrastructure. Unfortunately, at the moment you need to run `package-lambda.sh` before `terraform plan` so that the zip file exists. Maybe we can in future use `null_resource` or `archive_file`?
+There is an example in the terraform directory of how to set up all the infrastructure for this with terraform including a cloudwatch event which triggers once a day (configurable). The AWS console is a massive foot-gun: use code for your infrastructure.
+
+The lambda is created with a junk zip file as we don't always want to couple the deployment of code and infrastructure. The actual code can be updated using `deploy.sh` for each account (e.g. setting the `AWS_PROFILE` environment variable to use a different account).
 
 ### Buckets
 Two buckets are required:
@@ -64,8 +66,8 @@ where the file "hook" contains the full Slack hook URL with no final newline.
 You'll then need to give the run lambda KMS decrypt access with that key.
 Alternatively, for testing you can set the `HOOK_URL` environment variable to the unencrypted hook URL.
 
-### Code
-Just zip the python files and upload. To avoid non-determinism in the zip file hash, we use `zip -X function.zip *.py && strip-nondeterminism --type zip function.zip` in `package-lambda.sh`. Otherwise the hash will randomly change without the lambda code being changed so the lambda will be redeployed unnecessarily. If you use nix, you should be able to add both `zip` and `strip-nondeterminism` to your nix env.
+### Lambda Code
+Just zip the python files and upload or use `deploy.sh`. To avoid non-determinism in the zip file hash, we use `zip -X function.zip *.py && strip-nondeterminism --type zip function.zip` in `package-lambda.sh`. If you use nix, you should be able to install both `zip` and `strip-nondeterminism` into your nix env.
 
 ## Development
 Format Python code with `format.sh` and then lint with `test.sh`.

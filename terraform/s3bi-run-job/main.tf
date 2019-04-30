@@ -107,14 +107,13 @@ resource "aws_iam_role_policy_attachment" "s3bi-decrypt-hook" {
 }
 
 resource "aws_lambda_function" "s3bi_run_lambda" {
-  function_name    = "s3bi-run"
-  description      = "Job to run s3bi using a config"
-  filename         = "${var.zip_file}"
-  role             = "${aws_iam_role.s3bi_lambda_run_role.arn}"
-  handler          = "lambda.run_handler"
-  source_code_hash = "${filebase64sha256(var.zip_file)}"
-  runtime          = "python3.7"
-  timeout          = 900
+  function_name = "s3bi-run"
+  description   = "Job to run s3bi using a config"
+  filename      = "${path.module}/../no-code-deployed-yet.zip"
+  role          = "${aws_iam_role.s3bi_lambda_run_role.arn}"
+  handler       = "lambda.run_handler"
+  runtime       = "python3.7"
+  timeout       = 900
 
   environment {
     variables = {
