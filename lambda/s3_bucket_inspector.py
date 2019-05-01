@@ -167,7 +167,7 @@ def get_s3_bucket_list(s3_client: BaseClient, **_: Any) -> List[str]:
 
 
 def keys_in_bucket(s3_client: BaseClient, bucket_name: str, max_keys: int) -> List[str]:
-    log.info("Getting %d keys from bucket '%s'", max_keys, bucket_name)
+    log.debug("Getting %d keys from bucket '%s'", max_keys, bucket_name)
     result = s3_client.list_objects_v2(
         Bucket=bucket_name,
         MaxKeys=max_keys,  # Fetches the first max_keys files, sorted alphabetically by key

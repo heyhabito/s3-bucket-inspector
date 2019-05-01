@@ -1,10 +1,13 @@
 import os
 import json
+import logging
 from base64 import b64decode
 from typing import Any, Dict, List, NamedTuple, Set, Tuple
 
 import boto3
 from botocore.vendored import requests
+
+log = logging.getLogger(__name__)
 
 
 class IssueGroup(NamedTuple):
@@ -84,5 +87,6 @@ def send(message: Dict[str, Any]) -> None:
     elif "HOOK_URL" in os.environ:
         hook = os.environ["HOOK_URL"]
     else:
+        log.warning("No Slack hook configured")
         return
     requests.post(hook, data=json.dumps(message)).raise_for_status()

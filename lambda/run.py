@@ -36,7 +36,6 @@ class TestRunner:
 
     def _get_issues(self) -> Generator[Dict, None, None]:
         for test in self._tests:
-            log.info("Running test: %s", type(test).__name__)
             for issue in test.find_issues():
                 log.info("Found %s with resource '%s'", issue.issue, issue.resource)
                 yield {"test": type(test).__name__, **issue.to_json()}
@@ -102,7 +101,7 @@ class TestRunner:
         )
         if previous_output:
             return diff_previous(latest_output, previous_output, whitelist)
-        return set(), set()
+        return set_of_issues(latest_output, whitelist), set()
 
 
 def diff_previous(
@@ -111,11 +110,8 @@ def diff_previous(
     whitelist: Optional[Whitelist] = None,
 ) -> Tuple[Set[Tuple[str, str]], Set[Tuple[str, str]]]:
     """Return the new issues and the fixed issues compared to the previous output."""
-    current_issues = set_of_issues(latest_output)
-    previous_issues = set_of_issues(previous_output)
-    if whitelist:
-        current_issues -= whitelist
-        previous_issues -= whitelist
+    current_issues = set_of_issues(latest_output, whitelist)
+    previous_issues = set_of_issues(previous_output, whitelist)
     new_issues = current_issues - previous_issues
     resolved_issues = previous_issues - current_issues
     if new_issues:
@@ -143,13 +139,21 @@ def get_whitelist(config_bucket_name: str) -> Optional[Whitelist]:
         )
     except ClientError as e:
         if e.response["Error"]["Code"] == "NoSuchKey":
+            log.warning(
+                "No whitelist found at s3://%s/whitelist.json", config_bucket_name
+            )
             return None
         raise
 
 
-def set_of_issues(output: Output) -> Set[Tuple[str, str]]:
+def set_of_issues(
+    output: Output, whitelist: Optional[Whitelist]
+) -> Set[Tuple[str, str]]:
     """Processes run output JSON and returns a set of issue tuples to compare with previous runs."""
-    return set((issue["issue"], issue["resource"]) for issue in output["issues"])
+    issues = set((issue["issue"], issue["resource"]) for issue in output["issues"])
+    if whitelist:
+        issues -= whitelist
+    return issues
 
 
 def key_from_output(output: Output) -> str:
