@@ -1,5 +1,5 @@
 resource "aws_iam_role" "s3bi_lambda_run_role" {
-  name        = "s3bi_lambda_run_role"
+  name_prefix = "s3bi_lambda_run_role"
   description = "Role for S3 Bucket Inspector job which actually runs the tests"
 
   assume_role_policy = <<EOF
@@ -20,7 +20,7 @@ EOF
 }
 
 resource "aws_iam_policy" "s3bi_lambda_read_config_policy" {
-  name        = "s3bi_lambda_read_config_policy"
+  name_prefix = "s3bi_lambda_read_config_policy"
   description = "Ability to read s3bi configs from ${var.config_bucket_arn}"
 
   policy = <<EOF
@@ -47,7 +47,7 @@ EOF
 }
 
 resource "aws_iam_policy" "s3bi_lambda_write_output_policy" {
-  name        = "s3bi_lambda_write_output_policy"
+  name_prefix = "s3bi_lambda_write_output_policy"
   description = "Ability to read from and write to ${var.output_bucket_arn}. Read and list access needed for comparison with previous results."
 
   policy = <<EOF
@@ -72,7 +72,7 @@ EOF
 }
 
 resource "aws_iam_policy" "s3bi_lambda_decrypt_config_policy" {
-  name        = "s3bi_lambda_decrypt_config_policy"
+  name_prefix = "s3bi_lambda_decrypt_config_policy"
   description = "Ability to use the KMS key (needed to decrypt Slack hook url)"
 
   policy = <<EOF
@@ -107,7 +107,7 @@ resource "aws_iam_role_policy_attachment" "s3bi-decrypt-hook" {
 }
 
 resource "aws_lambda_function" "s3bi_run_lambda" {
-  function_name = "s3bi-run"
+  function_name = "s3bi-${var.function_name}"
   description   = "Job to run s3bi using a config"
   filename      = "${path.module}/../no-code-deployed-yet.zip"
   role          = "${aws_iam_role.s3bi_lambda_run_role.arn}"
@@ -120,7 +120,14 @@ resource "aws_lambda_function" "s3bi_run_lambda" {
       CONFIG_BUCKET      = "${var.config_bucket_name}"
       OUTPUT_BUCKET      = "${var.output_bucket_name}"
       ENCRYPTED_HOOK_URL = "${var.encrypted_slack_hook}"
+      DIFF_ONLY          = "${var.diff_only}"
     }
+  }
+
+  lifecycle {
+    ignore_changes = [
+      "filename",
+    ]
   }
 }
 

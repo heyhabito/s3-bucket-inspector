@@ -1,4 +1,4 @@
-# You might want `source = "../s3bi-run-job"` to use local rather than remote module sources, or to use `?ref=hash_or_branch_name`.
+# You might want `source = "./s3bi-run-job"` to use local rather than remote module sources, or to use `?ref=hash_or_branch_name`.
 
 module "s3bi_buckets" {
   source             = "github.com/heyhabito/s3-bucket-inspector.git//terraform/s3bi-buckets"

@@ -5,14 +5,14 @@ cd $(dirname "$0")
 
 ./package-lambda.sh
 
-# Update run code. Will only succeed on main account
-aws lambda update-function-code \
-  --function-name s3bi-run \
-  --zip-file fileb://function.zip \
-  --output json || true
-
-# Update config code (required for all accounts).
-aws lambda update-function-code \
-  --function-name s3bi-config \
-  --zip-file fileb://function.zip \
-  --output json
+# Update lambda code for all functions prefixed by s3bi-
+aws lambda list-functions \
+  --query Functions[].FunctionName \
+  --output json | \
+  jq .[] -r | \
+  grep "^s3bi-" |
+  xargs -I {} \
+    aws lambda update-function-code \
+      --function-name {} \
+      --zip-file fileb://function.zip \
+      --output json

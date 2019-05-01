@@ -8,6 +8,18 @@ variable "encrypted_slack_hook" {
   type        = "string"
 }
 
+variable "function_name" {
+  # Set function_name if you want multiple run lambdas, as they need unique names (prefixed by s3bi-)
+  description = "Name of lambda function"
+  type        = "string"
+  default     = "run"
+}
+
+variable "diff_only" {
+  # Set to anything other than the empty string
+  default = ""
+}
+
 variable "config_bucket_name" {
   type = "string"
 }

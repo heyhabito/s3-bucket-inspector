@@ -84,6 +84,12 @@ resource "aws_lambda_function" "s3bi_config_lambda" {
       CONFIG_BUCKET = "${var.config_bucket_name}"
     }
   }
+
+  lifecycle {
+    ignore_changes = [
+      "filename",
+    ]
+  }
 }
 
 module "s3bi_config_cron" {
