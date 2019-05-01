@@ -2,3 +2,4 @@ black
 boto3
 mypy
 pylint
+pytest

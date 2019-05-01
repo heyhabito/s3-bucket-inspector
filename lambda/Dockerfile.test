@@ -3,6 +3,7 @@ FROM python:3.7-slim-stretch
 # By default python writes junk (*.pyc) files everywhere
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONPATH /app
 
 RUN groupadd -r me && \
     useradd -r -g me me && \

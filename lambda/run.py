@@ -1,7 +1,7 @@
 import json
 import logging
 from datetime import datetime, timedelta
-from typing import Any, cast, Dict, Generator, NewType, Optional, Set, Tuple
+from typing import Any, cast, Dict, Generator, List, NewType, Optional, Set, Tuple
 
 import boto3
 from botocore.exceptions import ClientError
@@ -121,22 +121,26 @@ def diff_previous(
     return new_issues, resolved_issues
 
 
+def parse_whitelist(whitelist_json: Dict[str, List[str]]) -> Whitelist:
+    return cast(
+        Whitelist,
+        {
+            (issue, bucket_name)
+            for issue, buckets in whitelist_json.items()
+            for bucket_name in buckets
+        },
+    )
+
+
 def get_whitelist(config_bucket_name: str) -> Optional[Whitelist]:
     """Fetch whitelist.json, parse it and return it if it exists."""
     try:
-        whitelist_dict = json.load(
+        whitelist_json = json.load(
             boto3.client("s3").get_object(
                 Bucket=config_bucket_name, Key="whitelist.json"
             )["Body"]
         )
-        return cast(
-            Whitelist,
-            {
-                (issue, bucket_name)
-                for issue, buckets in whitelist_dict.items()
-                for bucket_name in buckets
-            },
-        )
+        return parse_whitelist(whitelist_json)
     except ClientError as e:
         if e.response["Error"]["Code"] == "NoSuchKey":
             log.warning(
