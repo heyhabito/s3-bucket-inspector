@@ -70,6 +70,11 @@ resource "aws_iam_role_policy_attachment" "s3bi-write-config" {
   policy_arn = "${aws_iam_policy.s3bi_lambda_write_config_policy.arn}"
 }
 
+resource "aws_iam_role_policy_attachment" "s3bi-cloudwatch-logs" {
+  role       = "${aws_iam_role.s3bi_lambda_config_role.name}"
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+}
+
 resource "aws_lambda_function" "s3bi_config_lambda" {
   function_name = "s3bi-config"
   description   = "Job to make a config for s3bi with a list of buckets and keys"

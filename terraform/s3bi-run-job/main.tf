@@ -106,6 +106,11 @@ resource "aws_iam_role_policy_attachment" "s3bi-decrypt-hook" {
   policy_arn = "${aws_iam_policy.s3bi_lambda_decrypt_config_policy.arn}"
 }
 
+resource "aws_iam_role_policy_attachment" "s3bi-cloudwatch-logs" {
+  role       = "${aws_iam_role.s3bi_lambda_run_role.name}"
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+}
+
 resource "aws_lambda_function" "s3bi_run_lambda" {
   function_name = "s3bi-${var.function_name}"
   description   = "Job to run s3bi using a config"
