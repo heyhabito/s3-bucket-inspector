@@ -5,7 +5,7 @@ from typing import Any, cast, Dict, Generator, List, NewType, Optional, Set, Tup
 
 import boto3
 from botocore.exceptions import ClientError
-from botocore.vendored import requests
+import requests
 
 from json_dumper import dumps
 from s3_bucket_inspector import (

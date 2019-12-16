@@ -5,7 +5,7 @@ from functools import lru_cache
 from typing import Any, Dict, Generator, List, Optional
 
 from botocore.client import BaseClient
-from botocore.vendored import requests
+import requests
 
 from issues import Issue
 

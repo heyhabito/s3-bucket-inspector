@@ -5,7 +5,7 @@ from base64 import b64decode
 from typing import Any, Dict, List, NamedTuple, Set, Tuple
 
 import boto3
-from botocore.vendored import requests
+import requests
 
 log = logging.getLogger(__name__)
 
