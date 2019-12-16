@@ -1,3 +1,6 @@
+import os
+import sys
+
 import json
 import logging
 from datetime import datetime, timedelta
@@ -14,6 +17,9 @@ from s3_bucket_inspector import (
     PubliclyReadableFiles,
     PubliclyUploadableBuckets,
 )
+
+CWD = os.path.dirname(os.path.realpath(__file__))
+sys.path.insert(0, os.path.join(CWD, "lib"))
 
 log = logging.getLogger(__name__)
 Output = NewType("Output", Dict[str, Any])
