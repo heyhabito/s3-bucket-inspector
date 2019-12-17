@@ -5,20 +5,11 @@ cd $(dirname "$0")
 
 rm -f function.zip
 
-# Setup virtualenv
-virtualenv --python=python3.7 v-env
-source v-env/bin/activate
-pip install requests
-deactivate
-OLDPWD=$(pwd)
+# Install dependencies
+pip install --system requests  -t ./
 
-# Package the libraries
-cd v-env/lib/python3.7/site-packages
-zip -r9 ${OLDPWD}/function.zip .
-
-# Package our lambda code without extra file attributes
-cd ${OLDPWD}
-zip -X function.zip *.py
+# Create deployment package
+zip -X -r function.zip *
 
 # Fix zip determinism
 strip-nondeterminism --type zip function.zip
