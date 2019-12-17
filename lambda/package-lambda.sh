@@ -6,7 +6,7 @@ cd $(dirname "$0")
 rm -f function.zip
 
 # Install dependencies
-pip install --system requests  -t ./
+pip install requests  -t ./
 
 # Create deployment package
 zip -X -r function.zip *
