@@ -18,9 +18,6 @@ from s3_bucket_inspector import (
     PubliclyUploadableBuckets,
 )
 
-CWD = os.path.dirname(os.path.realpath(__file__))
-sys.path.insert(0, os.path.join(CWD, "lib"))
-
 log = logging.getLogger(__name__)
 Output = NewType("Output", Dict[str, Any])
 Whitelist = NewType("Whitelist", Set[Tuple[str, str]])
