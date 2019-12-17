@@ -10,9 +10,15 @@ virtualenv --python=python3.7 v-env
 source v-env/bin/activate
 pip install requests
 deactivate
+OLDPWD=$(pwd)
+
+# Package the libraries
+cd v-env/lib/python3.7/site-packages
+zip -r9 ${OLDPWD}/function.zip .
 
 # Package our lambda code without extra file attributes
-zip -X -r function.zip *
+cd ${OLDPWD}
+zip -X function.zip *.py
 
 # Fix zip determinism
 strip-nondeterminism --type zip function.zip
