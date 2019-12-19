@@ -27,11 +27,11 @@ def run_handler(event, context):  # pylint: disable=unused-argument
     log.info("## Getting configs")
     configs = get_configs(config_bucket_name)
     test_runner = TestRunner(output_bucket_name, *configs.values())
-    log.info("## Output:")
-    log.info(output)
     output = test_runner.run_and_upload(
         accounts=[k.split(".")[0] for k in configs.keys()]  # 123.json -> 123
     )
+    log.info("## Output:")
+    log.info(output)
     log.info("## Getting whitelist")
     whitelist = get_whitelist(config_bucket_name)
     log.info("whitelist")
