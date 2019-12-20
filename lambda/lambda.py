@@ -34,7 +34,7 @@ def run_handler(event, context):  # pylint: disable=unused-argument
     log.info(output)
     log.info("## Getting whitelist")
     whitelist = get_whitelist(config_bucket_name)
-    log.info("whitelist")
+    log.info(whitelist)
     if os.environ.get("DIFF_ONLY"):
         new, fixed = test_runner.diff_previous_s3(output, whitelist)
         send_diff_message(new, fixed, output_bucket_name, key_from_output(output))
