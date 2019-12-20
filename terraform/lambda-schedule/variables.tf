@@ -1,15 +1,15 @@
 variable "rule_description" {
-  type = "string"
+  type = string
 }
 
 variable "schedule_expression" {
-  type = "string"
+  type = string
 }
 
 variable "lambda_arn" {
-  type = "string"
+  type = string
 }
 
 variable "lambda_name" {
-  type = "string"
+  type = string
 }

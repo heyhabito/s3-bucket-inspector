@@ -92,22 +92,22 @@ EOF
 }
 
 resource "aws_iam_role_policy_attachment" "s3bi-read-config" {
-  role       = "${aws_iam_role.s3bi_lambda_run_role.name}"
-  policy_arn = "${aws_iam_policy.s3bi_lambda_read_config_policy.arn}"
+  role       = aws_iam_role.s3bi_lambda_run_role.name
+  policy_arn = aws_iam_policy.s3bi_lambda_read_config_policy.arn
 }
 
 resource "aws_iam_role_policy_attachment" "s3bi-write-output" {
-  role       = "${aws_iam_role.s3bi_lambda_run_role.name}"
-  policy_arn = "${aws_iam_policy.s3bi_lambda_write_output_policy.arn}"
+  role       = aws_iam_role.s3bi_lambda_run_role.name
+  policy_arn = aws_iam_policy.s3bi_lambda_write_output_policy.arn
 }
 
 resource "aws_iam_role_policy_attachment" "s3bi-decrypt-hook" {
-  role       = "${aws_iam_role.s3bi_lambda_run_role.name}"
-  policy_arn = "${aws_iam_policy.s3bi_lambda_decrypt_config_policy.arn}"
+  role       = aws_iam_role.s3bi_lambda_run_role.name
+  policy_arn = aws_iam_policy.s3bi_lambda_decrypt_config_policy.arn
 }
 
 resource "aws_iam_role_policy_attachment" "s3bi-cloudwatch-logs" {
-  role       = "${aws_iam_role.s3bi_lambda_run_role.name}"
+  role       = aws_iam_role.s3bi_lambda_run_role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
 }
 
@@ -115,23 +115,23 @@ resource "aws_lambda_function" "s3bi_run_lambda" {
   function_name = "s3bi-${var.function_name}"
   description   = "Job to run s3bi using a config"
   filename      = "${path.module}/../no-code-deployed-yet.zip"
-  role          = "${aws_iam_role.s3bi_lambda_run_role.arn}"
+  role          = aws_iam_role.s3bi_lambda_run_role.arn
   handler       = "lambda.run_handler"
   runtime       = "python3.7"
   timeout       = 900
 
   environment {
     variables = {
-      CONFIG_BUCKET      = "${var.config_bucket_name}"
-      OUTPUT_BUCKET      = "${var.output_bucket_name}"
-      ENCRYPTED_HOOK_URL = "${var.encrypted_slack_hook}"
-      DIFF_ONLY          = "${var.diff_only}"
+      CONFIG_BUCKET      = var.config_bucket_name
+      OUTPUT_BUCKET      = var.output_bucket_name
+      ENCRYPTED_HOOK_URL = var.encrypted_slack_hook
+      DIFF_ONLY          = var.diff_only
     }
   }
 
   lifecycle {
     ignore_changes = [
-      "filename",
+      filename,
     ]
   }
 }
@@ -139,7 +139,7 @@ resource "aws_lambda_function" "s3bi_run_lambda" {
 module "s3bi_run_cron" {
   source              = "../lambda-schedule"
   rule_description    = "Runs s3bi to check for bucket security issues"
-  schedule_expression = "${var.schedule_expression}"
-  lambda_name         = "${aws_lambda_function.s3bi_run_lambda.function_name}"
-  lambda_arn          = "${aws_lambda_function.s3bi_run_lambda.arn}"
+  schedule_expression = var.schedule_expression
+  lambda_name         = aws_lambda_function.s3bi_run_lambda.function_name
+  lambda_arn          = aws_lambda_function.s3bi_run_lambda.arn
 }

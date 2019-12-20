@@ -1,5 +1,5 @@
 resource "aws_s3_bucket_policy" "cross_account_upload_config" {
-  bucket = "${var.bucket_name}"
+  bucket = var.bucket_name
 
   policy = <<POLICY
 {

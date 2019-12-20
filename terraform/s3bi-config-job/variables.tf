@@ -1,12 +1,12 @@
 variable "config_bucket_name" {
-  type = "string"
+  type = string
 }
 
 variable "config_bucket_arn" {
-  type = "string"
+  type = string
 }
 
 variable "schedule_expression" {
-  type    = "string"
+  type    = string
   default = "cron(0 10 * * ? *)"
 }
