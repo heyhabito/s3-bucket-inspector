@@ -1,6 +1,10 @@
 # Config and results buckets for S3 Bucket Inspector (s3bi)
 resource "aws_s3_bucket" "s3bi_config_bucket" {
   bucket = var.s3bi_config_bucket
+}
+
+resource "aws_s3_bucket_acl" "s3bi_config_bucket" {
+  bucket = aws_s3_bucket.s3bi_config_bucket.id
   acl    = "private"
 }
 
@@ -11,6 +15,10 @@ module "s3bi-config-non-public" {
 
 resource "aws_s3_bucket" "s3bi_output_bucket" {
   bucket = var.s3bi_output_bucket
+}
+
+resource "aws_s3_bucket_acl" "s3bi_output_bucket" {
+  bucket = aws_s3_bucket.s3bi_output_bucket.id
   acl    = "private"
 }
 
