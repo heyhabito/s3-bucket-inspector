@@ -10,17 +10,17 @@ module "s3bi_run" {
   source               = "github.com/heyhabito/s3-bucket-inspector.git//terraform/s3bi-run-job"
   kms_key_arn          = "blah"
   encrypted_slack_hook = "wskldjfkls"
-  config_bucket_name   = "${module.s3bi_buckets.config_bucket_name}"
-  config_bucket_arn    = "${module.s3bi_buckets.config_bucket_arn}"
-  output_bucket_name   = "${module.s3bi_buckets.output_bucket_name}"
-  output_bucket_arn    = "${module.s3bi_buckets.output_bucket_arn}"
+  config_bucket_name   = module.s3bi_buckets.config_bucket_name
+  config_bucket_arn    = module.s3bi_buckets.config_bucket_arn
+  output_bucket_name   = module.s3bi_buckets.output_bucket_name
+  output_bucket_arn    = module.s3bi_buckets.output_bucket_arn
   schedule_expression  = "cron(35 10 * * ? *)"
 }
 
 module "s3bi_config_main" {
   source              = "github.com/heyhabito/s3-bucket-inspector.git//terraform/s3bi-config-job"
-  config_bucket_name  = "${module.s3bi_buckets.config_bucket_name}"
-  config_bucket_arn   = "${module.s3bi_buckets.config_bucket_arn}"
+  config_bucket_name  = module.s3bi_buckets.config_bucket_name
+  config_bucket_arn   = module.s3bi_buckets.config_bucket_arn
   schedule_expression = "cron(0 10 * * ? *)"
 }
 
@@ -31,13 +31,13 @@ module "s3bi_config_datascience" {
   }
 
   source              = "github.com/heyhabito/s3-bucket-inspector.git//terraform/s3bi-config-job"
-  config_bucket_name  = "${module.s3bi_buckets.config_bucket_name}"
-  config_bucket_arn   = "${module.s3bi_buckets.config_bucket_arn}"
+  config_bucket_name  = module.s3bi_buckets.config_bucket_name
+  config_bucket_arn   = module.s3bi_buckets.config_bucket_arn
   schedule_expression = "cron(0 10 * * ? *)"
 }
 
 module "s3bi_datascience_cross_account_access_to_config_bucket" {
   source      = "github.com/heyhabito/s3-bucket-inspector.git//terraform/s3bi-cross-account-access"
-  bucket_name = "${module.s3bi_buckets.config_bucket_name}"
+  bucket_name = module.s3bi_buckets.config_bucket_name
   account_id  = 12345
 }
